@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: ${{github.ref}}
 
       - name: Find previous tag
         id: previous-tag
@@ -30,7 +28,7 @@ jobs:
         if: contains(github.event.pull_request.head.ref, 'hotfix/')
         uses: actions/github-script@v3
         with:
-          github-token: ${{github.token}}
+          GITHUB_TOKEN: ${{github.token}}
           script: |
             github.git.createRef({
               owner: context.repo.owner,
@@ -43,7 +41,7 @@ jobs:
         if: contains(github.event.pull_request.head.ref, 'release/')
         uses: actions/github-script@v3
         with:
-          github-token: ${{github.token}}
+          GITHUB_TOKEN: ${{github.token}}
           script: |
             github.git.createRef({
               owner: context.repo.owner,
