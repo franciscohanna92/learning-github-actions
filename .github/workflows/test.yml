@@ -23,6 +23,9 @@ jobs:
         uses: 'WyriHaximus/github-action-next-semvers@v1'
         with:
           version: ${{steps.previous-tag.outputs.tag}}
+
+      - name: Get color
+        run: echo 'The selected color is' ${{github.event.pull_request.head.ref}}
       
       - name: Create tag for patch version (hotfix)
         if: contains(github.event.pull_request.head.ref, 'hotfix/')
