@@ -1,10 +1,12 @@
 name: Deploy to Production
 on:
-  push:
+  pull_request:
     branches:
-      - 'master'
+      - master
+    types: [closed]
 jobs:
   build-and-deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,9 +26,6 @@ jobs:
         with:
           version: ${{steps.previous-tag.outputs.tag}}
 
-      - name: Get color
-        run: echo 'The PR is' ${{github.event.push.head.ref}}
-      
       - name: Create tag for patch version (hotfix)
         if: contains(github.event.pull_request.head.ref, 'hotfix/')
         uses: actions/github-script@v3
