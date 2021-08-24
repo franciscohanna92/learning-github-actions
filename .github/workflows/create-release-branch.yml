@@ -10,19 +10,29 @@ jobs:
     - name: Checkout master
       uses: actions/checkout@v2
       with:
-        ref: master
+        ref: 'master'
 
     - name: Find previous tag
       id: previous-tag
       uses: jimschubert/query-tag-action@v1
       with:
-        include: v*
+        include: 'v*'
+
+    - name: Show previous tag
+      id: display
+      run: |
+        echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
 
     - name: Get next semver
       id: next-tag
       uses: WyriHaximus/github-action-next-semvers@v1
       with:
         version: ${{steps.previous-tag.outputs.tag}}
+
+    - name: Show next tag
+      id: display
+      run: |
+        echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
 
     - name: Check out code
       uses: actions/checkout@v2
