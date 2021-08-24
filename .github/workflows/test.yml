@@ -12,12 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Find previous tag
         id: previous-tag
-        uses: jimschubert/query-tag-action@v1
-        with:
-          include: 'v*'
+        uses: WyriHaximus/github-action-get-previous-tag@v1
 
       - name: Get next semver
         id: next-tag
