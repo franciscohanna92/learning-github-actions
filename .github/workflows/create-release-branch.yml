@@ -42,7 +42,7 @@ jobs:
     - name: Create pull request into master
       uses: thomaseizinger/create-pull-request@1.2.1
       with:
-        github-token: ${{github.token}}
+        github_token: ${{github.token}}
         head: release/${{ steps.next-tag.outputs.v_minor }}
         base: master
         title: Release ${{ steps.next-tag.outputs.v_minor }} into master
@@ -51,7 +51,7 @@ jobs:
     - name: Create pull request to develop
       uses: thomaseizinger/create-pull-request@1.2.1
       with:
-        github-token: ${{github.token}}
+        github_token: ${{github.token}}
         head: release/${{ steps.next-tag.outputs.v_minor }}
         base: develop
         title: Release ${{ steps.next-tag.outputs.v_minor }} into develop
