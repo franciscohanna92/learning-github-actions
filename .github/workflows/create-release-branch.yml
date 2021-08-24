@@ -7,11 +7,10 @@ jobs:
     name: Create release branch
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout master
+    - name: Check out code
       uses: actions/checkout@v2
       with:
-        ref: 'master'
-        fetch-depth: 0
+        ref: 'develop'
 
     - name: Find previous tag
       id: previous-tag
@@ -33,10 +32,6 @@ jobs:
       run: |
         echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
 
-    - name: Check out code
-      uses: actions/checkout@v2
-      with:
-        ref: 'develop'
 
     - name: Create release branch
       run: git checkout -b release/${{ steps.next-tag.outputs.v_minor }}
@@ -52,7 +47,7 @@ jobs:
     - name: Create pull request into master
       uses: thomaseizinger/create-pull-request@1.2.1
       with:
-        # github_token: ${{github.token}}
+        github_token: ${{github.token}}
         head: release/${{ steps.next-tag.outputs.v_minor }}
         base: master
         title: Release ${{ steps.next-tag.outputs.v_minor }} into master
