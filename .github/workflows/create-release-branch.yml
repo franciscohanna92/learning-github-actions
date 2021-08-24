@@ -19,7 +19,7 @@ jobs:
         include: 'v*'
 
     - name: Show previous tag
-      id: display
+      id: display-previous-tag
       run: |
         echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
 
@@ -30,7 +30,7 @@ jobs:
         version: ${{steps.previous-tag.outputs.tag}}
 
     - name: Show next tag
-      id: display
+      id: display-next-tag
       run: |
         echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
 
