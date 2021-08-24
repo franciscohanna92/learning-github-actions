@@ -1,0 +1,51 @@
+name: Deploy to Production
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{github.ref}}
+
+      - name: Find previous tag
+        id: previous-tag
+        uses: jimschubert/query-tag-action@v1
+        with:
+          include: 'v*'
+
+      - name: Get next semver
+        id: next-tag
+        uses: 'WyriHaximus/github-action-next-semvers@v1'
+        with:
+          version: ${{steps.previous-tag.outputs.tag}}
+      
+      - name: Create tag for patch version (hotfix)
+        if: contains(github.event.pull_request.head.ref, 'hotfix/')
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{github.token}}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{steps.next-tag.outputs.v_patch}}",
+              sha: context.sha
+            })
+
+      - name: Create tag for minor version (release)
+        if: contains(github.event.pull_request.head.ref, 'release/')
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{github.token}}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{steps.next-tag.outputs.v_minor}}",
+              sha: context.sha
+            })
