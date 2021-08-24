@@ -5,7 +5,8 @@ on:
       - master
     types: [closed]
 jobs:
-  build-and-deploy:
+  create-tag:
+    name: 'Create tag'
     if: github.event.pull_request.merged == true && (contains(github.event.pull_request.head.ref, 'hotfix/') || contains(github.event.pull_request.head.ref, 'release/'))
     runs-on: ubuntu-latest
     steps:
