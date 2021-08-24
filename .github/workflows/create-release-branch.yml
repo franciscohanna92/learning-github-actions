@@ -11,17 +11,16 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: 'master'
+        fetch-depth: 0
 
     - name: Find previous tag
       id: previous-tag
-      uses: jimschubert/query-tag-action@v1
-      with:
-        include: 'v*'
+      uses: WyriHaximus/github-action-get-previous-tag@v1
 
     - name: Show previous tag
       id: display-previous-tag
       run: |
-        echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
+        echo 'Output from Find Tag: ${{steps.previous-tag.outputs.tag}}'
 
     - name: Get next semver
       id: next-tag
