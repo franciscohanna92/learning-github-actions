@@ -7,10 +7,11 @@ jobs:
     name: Create release branch
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code
+    - name: Checkout master
       uses: actions/checkout@v2
       with:
-        ref: 'develop'
+        ref: 'master'
+        fetch-depth: 0
 
     - name: Find previous tag
       id: previous-tag
@@ -32,6 +33,10 @@ jobs:
       run: |
         echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
 
+    - name: Check out code
+      uses: actions/checkout@v2
+      with:
+        ref: 'develop'
 
     - name: Create release branch
       run: git checkout -b release/${{ steps.next-tag.outputs.v_minor }}
