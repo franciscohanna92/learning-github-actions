@@ -1,9 +1,9 @@
-name: Create Release Branch
+name: Cut release
 on:
   workflow_dispatch:
       
 jobs:
-  create-release-bracn:
+  create-release-branch:
     name: Create release branch
     runs-on: ubuntu-latest
     steps:
