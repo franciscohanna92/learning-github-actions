@@ -1,0 +1,59 @@
+name: Cut release
+on:
+  workflow_dispatch:
+      
+jobs:
+  create-release-branch:
+    name: Create release branch
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout master
+      uses: actions/checkout@v2
+      with:
+        ref: 'master'
+        fetch-depth: 0
+
+    - name: Find previous tag
+      id: previous-tag
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+
+    - name: Show previous tag
+      id: display-previous-tag
+      run: |
+        echo 'Output from Find Tag: ${{steps.previous-tag.outputs.tag}}'
+
+    - name: Get next semver
+      id: next-tag
+      uses: WyriHaximus/github-action-next-semvers@v1
+      with:
+        version: ${{steps.previous-tag.outputs.tag}}
+
+    - name: Show next tag
+      id: display-next-tag
+      run: |
+        echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
+
+    - name: Check out code
+      uses: actions/checkout@v2
+      with:
+        ref: 'develop'
+
+    - name: Create release branch
+      run: git checkout -b release/${{ steps.next-tag.outputs.v_minor }}
+
+    - name: Initialize mandatory git config
+      run: |
+       git config user.name "GitHub Actions"
+       git config user.email noreply@github.com
+
+    - name: Push new branch
+      run: git push origin release/${{ steps.next-tag.outputs.v_minor }}
+
+    - name: Create pull request into master
+      uses: thomaseizinger/create-pull-request@1.2.1
+      with:
+        github_token: ${{github.token}}
+        head: release/${{ steps.next-tag.outputs.v_minor }}
+        base: master
+        title: Release ${{ steps.next-tag.outputs.v_minor }} into master
+        # draft: true
