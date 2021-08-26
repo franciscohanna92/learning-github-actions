@@ -4,6 +4,7 @@ on:
     branches:
       - master
     types: [closed]
+    
 jobs:
   create-tag:
     name: 'Create tag'

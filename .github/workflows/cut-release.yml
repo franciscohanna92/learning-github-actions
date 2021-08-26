@@ -17,10 +17,10 @@ jobs:
       id: previous-tag
       uses: WyriHaximus/github-action-get-previous-tag@v1
 
-    - name: Show previous tag
-      id: display-previous-tag
-      run: |
-        echo 'Output from Find Tag: ${{steps.previous-tag.outputs.tag}}'
+    # - name: Show previous tag
+    #   id: display-previous-tag
+    #   run: |
+    #     echo 'Output from Find Tag: ${{steps.previous-tag.outputs.tag}}'
 
     - name: Get next semver
       id: next-tag
@@ -28,10 +28,10 @@ jobs:
       with:
         version: ${{steps.previous-tag.outputs.tag}}
 
-    - name: Show next tag
-      id: display-next-tag
-      run: |
-        echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
+    # - name: Show next tag
+    #   id: display-next-tag
+    #   run: |
+    #     echo 'Output from Find Tag: ${{steps.next-tag.outputs.v_minor}}'
 
     - name: Check out code
       uses: actions/checkout@v2
@@ -49,6 +49,16 @@ jobs:
     - name: Push new branch
       run: git push origin release/${{ steps.next-tag.outputs.v_minor }}
 
+    # TODO: Create PR on push to release/*
+    # - name: Create pull request into develop
+    #   uses: thomaseizinger/create-pull-request@1.2.1
+    #   with:
+    #     github_token: ${{github.token}}
+    #     head: release/${{ steps.next-tag.outputs.v_minor }}
+    #     base: develop
+    #     title: Release ${{ steps.next-tag.outputs.v_minor }} into develop
+    #     draft: true
+
     - name: Create pull request into master
       uses: thomaseizinger/create-pull-request@1.2.1
       with:
@@ -57,3 +67,4 @@ jobs:
         base: master
         title: Release ${{ steps.next-tag.outputs.v_minor }} into master
         # draft: true
+
