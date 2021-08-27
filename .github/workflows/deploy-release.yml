@@ -1,0 +1,72 @@
+name: Deploy to Production
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  create-tag:
+    name: 'Create tag'
+    if: github.event.pull_request.merged == true # && (contains(github.event.pull_request.head.ref, 'hotfix/') || contains(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Find previous tag
+        id: previous-tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+
+      - name: Get next semver tag
+        id: next-tag
+        uses: 'WyriHaximus/github-action-next-semvers@v1'
+        with:
+          version: ${{steps.previous-tag.outputs.tag}}
+
+      - name: Determine new version tag
+        uses: haya14busa/action-cond@v1
+        id: new-version
+        with:
+          cond: ${{ contains(github.event.pull_request.head.ref, 'release/') }}
+          if_true: ${{steps.next-tag.outputs.v_minor}}
+          if_false: ${{steps.next-tag.outputs.v_patch}}
+
+      - name: Create tag in repo
+        uses: actions/github-script@v3
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{steps.new-version.outputs.value}}",
+              sha: context.sha
+            })
+
+      - name: Generate changelog
+        id: generate_changelog
+        uses: mikepenz/release-changelog-builder-action@v2
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          failOnError: true
+          fromTag: ${{steps.previous-tag.outputs.tag}}
+          toTag: ${{steps.new-version.outputs.value}}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{steps.new-version.outputs.value}}
+          release_name: Release ${{steps.new-version.outputs.value}}
+          body: |
+            ${{steps.generate_changelog.outputs.changelog}}
+          draft: true
+          prerelease: false
+
+      # TODO: Create PR to develop when push to hotfix

@@ -1,0 +1,32 @@
+name: Push to release
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  create-dev-pr:
+    name: Create PR for release into develop 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create PR
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{steps.new-version.outputs.value}}
+          release_name: Release ${{steps.new-version.outputs.value}}
+          body: |
+            ${{steps.generate_changelog.outputs.changelog}}
+          draft: true
+          prerelease: false
+
+      - name: Create pull request into develop
+        uses: thomaseizinger/create-pull-request@1.2.1
+        with:
+          github_token: ${{github.token}}
+          head: ${{github.ref}}
+          base: develop
+          title: ${{github.ref}} into develop
+          
