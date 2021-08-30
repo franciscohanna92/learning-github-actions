@@ -15,4 +15,4 @@ jobs:
           github_token: ${{github.token}}
           head: ${{github.ref}}
           base: develop
-          title: ${GITHUB_REF##*/} into develop
+          title: ${{GITHUB_REF##*/}} into develop
