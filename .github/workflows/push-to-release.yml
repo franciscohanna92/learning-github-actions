@@ -15,7 +15,8 @@ jobs:
           param=$GITHUB_REF
           replaceMatch="refs/heads/release/"
           replaceValue="Release "
-          echo "::set-output name=dir::${param/$replaceMatch/$replaceValue} into develop"
+          result=${param/$replaceMatch/$replaceValue}
+          echo "::set-output name=dir::$result"
 
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
