@@ -49,16 +49,6 @@ jobs:
     - name: Push new branch
       run: git push origin release/${{steps.next-tag.outputs.v_minor}}
 
-    # TODO: Create PR on push to release/*
-    # - name: Create pull request into develop
-    #   uses: thomaseizinger/create-pull-request@1.2.1
-    #   with:
-    #     github_token: ${{github.token}}
-    #     head: release/${{ steps.next-tag.outputs.v_minor }}
-    #     base: develop
-    #     title: Release ${{ steps.next-tag.outputs.v_minor }} into develop
-    #     draft: true
-
     - name: Create pull request into master
       uses: thomaseizinger/create-pull-request@1.2.1
       with:
@@ -66,5 +56,4 @@ jobs:
         head: release/${{steps.next-tag.outputs.v_minor}}
         base: master
         title: Release/${{steps.next-tag.outputs.v_minor}} into master
-        # draft: true
 
