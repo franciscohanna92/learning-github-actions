@@ -1,4 +1,4 @@
-name: Push to release
+name: Create release/hotfix PR into develop/master
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 jobs:   
   create-dev-pr:
-    name: Create PR for release into develop 
+    name: Create PR
     runs-on: ubuntu-latest
     steps:
       - # Create release title based on the current ref, i.e:
@@ -20,7 +20,7 @@ jobs:
           replaceMatch="refs/heads/"
           replaceValue=""
           result=${param/$replaceMatch/$replaceValue}
-          echo "::set-output name=value::${result^} into develop"
+          echo "::set-output name=value::${result^}"
 
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
@@ -28,4 +28,12 @@ jobs:
           github_token: ${{github.token}}
           head: ${{github.ref}}
           base: develop
-          title: ${{steps.pr-title.outputs.value}}
+          title: ${{steps.pr-title.outputs.value}} into develop
+
+      - name: Create pull request into master
+        uses: thomaseizinger/create-pull-request@1.2.1
+        with:
+          github_token: ${{github.token}}
+          head: ${{github.ref}}
+          base: master
+          title: ${{steps.pr-title.outputs.value}} into master
