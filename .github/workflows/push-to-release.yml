@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Generate PR title
         id: pr-title
-        run: echo "::set-output name=value::GITHUB_REF##*/"
+        run: echo "::set-output name=value::$GITHUB_REF##*/"
 
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
