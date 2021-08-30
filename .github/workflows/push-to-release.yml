@@ -9,10 +9,14 @@ jobs:
     name: Create PR for release into develop 
     runs-on: ubuntu-latest
     steps:
+      - name: Generate PR title
+        id: pr-title
+        run: echo "::set-output name=value::GITHUB_REF##*/"
+
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
         with:
           github_token: ${{github.token}}
           head: ${{github.ref}}
           base: develop
-          title: ${{GITHUB_REF##*/}} into develop
+          title: ${{steps.pr-title.outputs.value}}
