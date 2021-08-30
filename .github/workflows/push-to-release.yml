@@ -3,16 +3,26 @@ on:
   push:
     branches:
       - release/*
+      - hotfix/*
 
-jobs:
+jobs:   
   create-dev-pr:
     name: Create PR for release into develop 
     runs-on: ubuntu-latest
     steps:
+      - name: Generate PR title
+        id: pr-title
+        run: |
+          param=$GITHUB_REF
+          replaceMatch="refs/heads/"
+          replaceValue=""
+          result=${param/$replaceMatch/$replaceValue}
+          echo "::set-output name=value::${result^} into develop"
+
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
         with:
           github_token: ${{github.token}}
           head: ${{github.ref}}
           base: develop
-          title: ${{github.ref}} into develop
+          title: ${{steps.pr-title.outputs.value}}
