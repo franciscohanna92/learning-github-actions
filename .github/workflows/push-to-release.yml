@@ -17,7 +17,7 @@ jobs:
           replaceMatch="refs/heads/"
           replaceValue=""
           result=${param/$replaceMatch/$replaceValue}
-          echo "::set-output name=value::${result^}"
+          echo "::set-output name=value::${result^} into develop"
 
       - name: Create pull request into develop
         uses: thomaseizinger/create-pull-request@1.2.1
@@ -25,4 +25,4 @@ jobs:
           github_token: ${{github.token}}
           head: ${{github.ref}}
           base: develop
-          title: ${{steps.pr-title.outputs.value}} into develop
+          title: ${{steps.pr-title.outputs.value}}
