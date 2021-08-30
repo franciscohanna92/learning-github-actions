@@ -13,8 +13,8 @@ jobs:
         id: pr-title
         run: |
           param=$GITHUB_REF
-          replaceMatch="refs/heads/release/"
-          replaceValue="Release "
+          replaceMatch="refs/heads/"
+          replaceValue=""
           result=${param/$replaceMatch/$replaceValue}
           echo "::set-output name=value::${result^}"
 
