@@ -68,5 +68,3 @@ jobs:
             ${{steps.generate_changelog.outputs.changelog}}
           draft: true
           prerelease: false
-
-      # TODO: Create PR to develop when push to hotfix

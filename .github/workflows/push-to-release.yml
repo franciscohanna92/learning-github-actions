@@ -1,18 +1,20 @@
+# This workflow will create a PR:
+# - into develop and master for a hotfix push
+# - into develop for a release push (the PR to master for the release is created in cut-release.yml)
 name: Create release/hotfix PR into develop/master
 on:
   push:
     branches:
       - release/*
       - hotfix/*
-
 jobs:   
   create-dev-pr:
     name: Create PR
     runs-on: ubuntu-latest
     steps:
-      - # Create release title based on the current ref, i.e:
-        # "refs/heads/release/v1.5.0" -> "Release/v1.5.0 into develop"
-        # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420 into develop"
+      - # Create PR title based on the current ref, i.e:
+        # "refs/heads/release/v1.5.0" -> "Release/v1.5.0"
+        # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420"
         name: Generate PR title
         id: pr-title
         run: |
