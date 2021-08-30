@@ -29,6 +29,7 @@ jobs:
           head: ${{github.ref}}
           base: develop
           title: ${{steps.pr-title.outputs.value}} into develop
+          draft: true
 
       - name: Create pull request into master
         uses: thomaseizinger/create-pull-request@1.2.1
