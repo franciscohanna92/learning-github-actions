@@ -10,7 +10,10 @@ jobs:
     name: Create PR for release into develop 
     runs-on: ubuntu-latest
     steps:
-      - name: Generate PR title
+      - # Create release title based on the current ref, i.e:
+        # "refs/heads/release/v1.5.0" -> "Release/v1.5.0 into develop"
+        # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420 into develop"
+        name: Generate PR title
         id: pr-title
         run: |
           param=$GITHUB_REF
