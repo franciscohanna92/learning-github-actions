@@ -1,6 +1,4 @@
-# This workflow will create a PR:
-# - into develop and master for a hotfix push
-# - into develop for a release push (the PR to master for the release is created in cut-release.yml)
+# This workflow will create a PR into develop and master for a hotfix push
 name: Create hotfix PR into develop and master
 on:
   push:

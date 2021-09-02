@@ -1,7 +1,5 @@
-# This workflow will create a PR:
-# - into develop and master for a hotfix push
-# - into develop for a release push (the PR to master for the release is created in cut-release.yml)
-name: Create release/hotfix PR into develop/master
+# This workflow will create a PR into develop for a release push (the PR to master for the release is created in cut-release.yml)
+name: Create release PR into develop
 on:
   push:
     branches:
@@ -29,4 +27,3 @@ jobs:
           head: ${{github.ref}}
           base: develop
           title: ${{steps.pr-title.outputs.value}} into develop
-          draft: true
