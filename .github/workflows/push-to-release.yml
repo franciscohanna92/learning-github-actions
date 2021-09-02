@@ -4,12 +4,21 @@ on:
     branches:
       - release/*
       - hotfix/*
+  workflow_run:
+    workflows: ["Cut release"]
+    types: 
+      - completed
 
 jobs:   
   create-dev-pr:
     name: Create PR
     runs-on: ubuntu-latest
     steps:
+      - name: Show Github Ref
+        id: show-github-ref
+        run: |
+          echo 'Github ref: ${{github.ref}}'
+          
       - # Create release title based on the current ref, i.e:
         # "refs/heads/release/v1.5.0" -> "Release/v1.5.0 into develop"
         # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420 into develop"

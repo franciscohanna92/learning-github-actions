@@ -39,10 +39,10 @@ jobs:
     - name: Push new branch
       run: git push origin release/${{steps.next-tag.outputs.v_minor}}
 
-    - name: Create pull request into master
-      uses: thomaseizinger/create-pull-request@1.2.1
-      with:
-        github_token: ${{github.token}}
-        head: release/${{steps.next-tag.outputs.v_minor}}
-        base: master
-        title: Release/${{steps.next-tag.outputs.v_minor}} into master
+    # - name: Create pull request into master
+    #   uses: thomaseizinger/create-pull-request@1.2.1
+    #   with:
+    #     github_token: ${{github.token}}
+    #     head: release/${{steps.next-tag.outputs.v_minor}}
+    #     base: master
+    #     title: Release/${{steps.next-tag.outputs.v_minor}} into master
