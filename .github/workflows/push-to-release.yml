@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - release/*
-      - hotfix/*
+      # - hotfix/*
   workflow_run:
     workflows: ["Cut release"]
     types: 
@@ -14,11 +14,21 @@ jobs:
     name: Create PR
     runs-on: ubuntu-latest
     steps:
-      - name: Show Github Ref
-        id: show-github-ref
-        run: |
-          echo 'Github ref: ${{github.ref}}'
-          
+      - name: Find previous tag
+        id: previous-tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+
+      - name: Get next semver
+        id: next-tag
+        uses: WyriHaximus/github-action-next-semvers@v1
+        with:
+          version: ${{steps.previous-tag.outputs.tag}}
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: release/${{steps.next-tag.outputs.v_minor}}
+
       - # Create release title based on the current ref, i.e:
         # "refs/heads/release/v1.5.0" -> "Release/v1.5.0 into develop"
         # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420 into develop"
