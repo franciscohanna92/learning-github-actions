@@ -7,37 +7,34 @@ jobs:
     name: Create release branch
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout master
-      uses: actions/checkout@v2
-      with:
-        ref: 'master'
-        fetch-depth: 0
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Find previous tag
-      id: previous-tag
-      uses: WyriHaximus/github-action-get-previous-tag@v1
+      - name: Find previous tag
+        id: previous-tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
 
-    - name: Get next semver
-      id: next-tag
-      uses: WyriHaximus/github-action-next-semvers@v1
-      with:
-        version: ${{steps.previous-tag.outputs.tag}}
+      - name: Get next semver
+        id: next-tag
+        uses: WyriHaximus/github-action-next-semvers@v1
+        with:
+          version: ${{steps.previous-tag.outputs.tag}}
 
-    - name: Check out code
-      uses: actions/checkout@v2
-      with:
-        ref: develop
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: develop
 
-    - name: Create release branch
-      run: git checkout -b release/${{steps.next-tag.outputs.v_minor}}
+      - name: Create release branch
+        run: git checkout -b release/${{steps.next-tag.outputs.v_minor}}
 
-    - name: Initialize mandatory git config
-      run: |
-       git config user.name "GitHub Actions"
-       git config user.email noreply@github.com
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
 
-    - name: Push new branch
-      run: git push origin release/${{steps.next-tag.outputs.v_minor}}
+      - name: Push new branch
+        run: git push origin release/${{steps.next-tag.outputs.v_minor}}
 
     # - name: Check out release branch
     #   uses: actions/checkout@v2
