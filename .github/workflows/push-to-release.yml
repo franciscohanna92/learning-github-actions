@@ -1,43 +1,20 @@
+# This workflow will create a PR:
+# - into develop and master for a hotfix push
+# - into develop for a release push (the PR to master for the release is created in cut-release.yml)
 name: Create release/hotfix PR into develop/master
 on:
   push:
     branches:
       - release/*
       # - hotfix/*
-  workflow_run:
-    workflows: ["Cut release"]
-    types: 
-      - completed
-
 jobs:   
   create-dev-pr:
     name: Create PR
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          ref: master
-          fetch_depth: 0
-
-      - name: Find previous tag
-        id: previous-tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-
-      - name: Get next semver
-        id: next-tag
-        uses: WyriHaximus/github-action-next-semvers@v1
-        with:
-          version: ${{steps.previous-tag.outputs.tag}}
-
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          ref: release/${{steps.next-tag.outputs.v_minor}}
-
-      - # Create release title based on the current ref, i.e:
-        # "refs/heads/release/v1.5.0" -> "Release/v1.5.0 into develop"
-        # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420 into develop"
+      - # Create PR title based on the current ref, i.e:
+        # "refs/heads/release/v1.5.0" -> "Release/v1.5.0"
+        # "refs/heads/hotfix/KON-420" -> "Hotfix/KON-420"
         name: Generate PR title
         id: pr-title
         run: |
@@ -54,11 +31,12 @@ jobs:
           head: ${{github.ref}}
           base: develop
           title: ${{steps.pr-title.outputs.value}} into develop
+          draft: true
 
-      - name: Create pull request into master
-        uses: thomaseizinger/create-pull-request@1.2.1
-        with:
-          github_token: ${{github.token}}
-          head: ${{github.ref}}
-          base: master
-          title: ${{steps.pr-title.outputs.value}} into master
+      # - name: Create pull request into master
+      #   uses: thomaseizinger/create-pull-request@1.2.1
+      #   with:
+      #     github_token: ${{github.token}}
+      #     head: ${{github.ref}}
+      #     base: master
+      #     title: ${{steps.pr-title.outputs.value}} into master
